@@ -1,4 +1,10 @@
-﻿#include <iostream>
+﻿/*
+	괴짜수(weird number) 찾기
+	과잉수(자기 자신을 제외한 약수를 모두 더한 값이 자신보다 큰 수) 중
+	유사완전수(인수 가운데 일부를 더한 값이 그 수 자신과 같은 수)가 아닌 수를 찾아라
+	괴짜수 예시 : 70, 836, 4030, 5830, 7192, 7912, 9272, ....
+*/
+#include <iostream>
 #include <vector>
 #include <algorithm>
 
