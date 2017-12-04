@@ -9,13 +9,14 @@ void CalcDivisor(const int num, vector<int> &divisor);
 // 과잉수 체크
 bool IsGreaterNum(const int num, const vector<int> &divisor);
 // 유사 완전수 체크
-bool IsSemiperfect(const int num, const vector<int> &divisor);
+bool IsSemiperfect(const int num, const vector<int> &divisor, const int index);
 // 출력
-void PrintDivisor(const vector<int> &divisor);
+void PrintResult(const vector<bool> &result);
 
 int main() {
 	int testIndex, checkNum;
 	vector<int> divisor;
+	vector<bool> result;
 
 	cin >> testIndex;
 	for (int i = 0; i < testIndex; i++) {
@@ -25,23 +26,21 @@ int main() {
 		cin >> checkNum;
 		// 약수 계산
 		CalcDivisor(checkNum, divisor);
-
 		// 약수들의 합 체크(자기자신 제외)
 		if (IsGreaterNum(checkNum, divisor)) {
-			cout << "greater!" << endl;
 			// 약수들의 합이 원래 수보다 큰지 비교
-			if (IsSemiperfect(checkNum, divisor)) {
-				cout << "weird" << endl;
+			if (!IsSemiperfect(checkNum, divisor, divisor.size() - 1)) {
+				result.push_back(true);
 			}
 			else {
-				cout << "not weird" << endl;
+				result.push_back(false);
 			}
 		}
 		else {
-			cout << "not weird" << endl;
+			result.push_back(false);
 		}
-		PrintDivisor(divisor);
 	}
+	PrintResult(result);
 	return 0;
 }
 
@@ -70,20 +69,48 @@ bool IsGreaterNum(const int num, const vector<int> &divisor) {
 		sum += temp[i];
 	}
 	if (sum > num) return true;
-
 	return false;
 }
 
-bool IsSemiperfect(const int num, const vector<int> &divisor) {
-	return false;
-}
+bool IsSemiperfect(const int num, const vector<int> &divisor, const int index) {
+	if (index < 0) {
+		return false;
+	}
 
-void PrintDivisor(const vector<int> &divisor) {
+	int sum = 0;
+	int i = 0;
 	vector<int> temp = divisor;
 
-	cout << "divisor : ";
-	for (int i = 0; i < temp.size(); ++i) {
-		cout << temp[i] << ",";
+	for (int i = 0; i < index; ++i) {
+		sum += temp[i];
 	}
-	cout << endl;
+
+	// 전부 더한 값에서 원래 값을 뺀다.
+	int gap = sum - num;
+	// 1. gap이 divisor 안에 있는지 확인한다. - 있으면 false 리턴
+	int tempSum = 0;
+ 	for (i = 0; i < index; ++i) {
+		if (temp[i] > gap) break;
+		if (temp[i] == gap) {
+			return true;
+		}
+		tempSum += temp[i];
+	}
+	for (int j = 0; j < index; ++j) {
+		if ((tempSum - gap) == temp[j]) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void PrintResult(const vector<bool> &result) {
+	for (int i = 0; i < result.size(); ++i) {
+		if (result[i]) {
+			cout << "weird" << endl;
+		}
+		else {
+			cout << "not weird" << endl;
+		}
+	}
 }
